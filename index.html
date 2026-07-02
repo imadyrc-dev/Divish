@@ -6,41 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Card</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            overflow: hidden;
-            background: #ffffff;
-        }
-
-        /* Animated Background */
-
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-
-            animation: bgMove 12s ease-in-out infinite alternate;
-            z-index: -2;
-        }
-
-        @keyframes bgMove {
-            from {
-                transform: scale(1);
-            }
-
-            to {
-                transform: scale(1.2);
-            }
+            overflow-x: hidden;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+            background: #000;
         }
 
         /* Cover */
@@ -55,6 +33,7 @@
             cursor: pointer;
             perspective: 1800px;
             background: #949494;
+            z-index: 10;
         }
 
         .topImage {
@@ -87,80 +66,23 @@
             backface-visibility: hidden;
         }
 
-        .overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, .35);
-        }
-
-        .centerText {
-            position: relative;
-            z-index: 5;
-            color: white;
-            text-align: center;
-        }
-
-        .centerText h1 {
-            font-size: 50px;
-            text-shadow: 0 0 25px cyan;
-        }
-
-        .centerText p {
-            margin-top: 15px;
-            opacity: .9;
-        }
-
-        .click {
-            margin-top: 25px;
-            display: inline-block;
-            padding: 14px 35px;
-            border: 2px solid white;
-            border-radius: 50px;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 0 0 rgba(255, 255, 255, .5);
-            }
-
-            50% {
-                transform: scale(1.1);
-                box-shadow: 0 0 30px rgba(255, 255, 255, .8);
-            }
-
-            100% {
-                transform: scale(1);
-            }
-        }
-
         /* Open Animation */
 
         .cover.open .topImage {
-            transform:
-                rotateX(-170deg) translateY(-10px);
+            transform: rotateX(-170deg) translateY(-10px);
         }
 
         .cover.open .bottomImage {
-            transform:
-                rotateX(170deg) translateY(10px);
-        }
-
-        .cover.open .centerText {
-            transform: scale(.5);
-            opacity: 0;
-            transition: 1s;
+            transform: rotateX(170deg) translateY(10px);
         }
 
         /* Main Card */
 
         .main {
-            position: absolute;
-            inset: 0;
+            position: relative;
+            width: 100%;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column;
             visibility: hidden;
             opacity: 0;
             transition: 1s;
@@ -171,97 +93,28 @@
             opacity: 1;
         }
 
+        /* Every section is nothing but a full-bleed image */
 
-
-        .card {
-            position: relative;
+        .img-section {
             width: 100%;
-            height: 100%;
+            height: 100vh;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, .4);
+            opacity: 0;
+            transform: translateY(40px) scale(1.02);
+            transition: opacity 1s ease, transform 1s ease;
         }
 
-        .card-bg {
-            position: absolute;
-            inset: 0;
+        .img-section.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .img-section img {
             width: 100%;
-            height: 100%;
+            height: 100vh;
+            display: block;
             object-fit: cover;
         }
-
-        .card-content {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 60px 40px;
-            color: #5a2416;
-        }
-
-        .date {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-bottom: 40px;
-            font-size: 18px;
-        }
-
-        .date strong {
-            font-size: 34px;
-        }
-
-        h1 {
-            font-size: 56px;
-            margin: 0;
-            font-family: Georgia, serif;
-        }
-
-        .and {
-            font-size: 28px;
-            margin: 12px 0;
-        }
-
-        h2 {
-            font-size: 48px;
-            margin-bottom: 25px;
-            font-family: Georgia, serif;
-        }
-
-        .tagline {
-            color: #8b1c2c;
-            font-size: 22px;
-            margin-bottom: 60px;
-        }
-
-        .host h4 {
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-
-        .host p {
-            font-size: 16px;
-            line-height: 1.8;
-        }
-
-        .open-btn {
-            margin-top: 40px;
-            background: #8b5a2b;
-            color: #fff;
-            padding: 15px 35px;
-            border-radius: 40px;
-            text-decoration: none;
-            transition: .3s;
-        }
-
-        .open-btn:hover {
-            transform: scale(1.08);
-            background: #6f431a;
-        }
-
-        /* Flower Rain */
 
         #flower-container {
             position: fixed;
@@ -282,7 +135,6 @@
         }
 
         @keyframes fall {
-
             0% {
                 transform: translateY(-80px) rotate(0deg);
                 opacity: 1;
@@ -292,18 +144,16 @@
                 transform: translateY(110vh) rotate(720deg);
                 opacity: .9;
             }
-
         }
-
 
         .music-btn {
             position: fixed;
-            top: 20px;
+            bottom: 20px;
             right: 20px;
             width: 50px;
             height: 50px;
-            border-radius: 50%;
             border: none;
+            border-radius: 50%;
             background: rgba(255, 255, 255, .9);
             color: #8b5a2b;
             font-size: 22px;
@@ -312,6 +162,7 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 5px 15px rgba(0, 0, 0, .2);
+            z-index: 1000;
         }
 
         .music-btn.playing {
@@ -328,75 +179,52 @@
 <body>
 
     <div class="cover" id="cover">
-
         <img src="top.png" class="topImage">
-
-
         <img src="bottom.png" class="bottomImage">
-
     </div>
 
-    <!-- Flower Rain -->
-
+    <!-- Main Card (revealed after cover opens) -->
     <div class="main" id="main">
 
-        <div class="card">
-
-            <!-- Background Invitation -->
-            <img src="1.jpg" class="card-bg">
-            <div id="flower-container"></div>
-
-            <!-- Content -->
-            <div class="card-content">
-
-                <div class="date">
-                    <span>July</span>
-                    <strong>05 - 06</strong>
-                    <span>2026</span>
-                </div>
-
-                <h1>Divisha</h1>
-
-                <div class="and">&</div>
-
-                <h2>Raghav</h2>
-
-                <p class="tagline">#DivyaRag</p>
-
-                <div class="host">
-                    <h4>Hosted By</h4>
-                    <p>
-                        Anil, Sanjay, Pawan Maheshwari<br>
-                        38, Maharana Pratap Nagar,<br>
-                        Bhilwara, Rajasthan - 311001
-                    </p>
-                </div>
-
-                <a href="#" class="open-btn">Open Invitation</a>
-
-            </div>
-
-        </div>
 
 
+        <section class="img-section">
+            <div id="flower-container"></div><img src="1.jpg" alt="">
+        </section>
+        <section class="img-section"><img src="2.jpg" alt=""></section>
+        <section class="img-section"><img src="3.jpg" alt=""></section>
+        <section class="img-section"><img src="4.jpg" alt=""></section>
+        <section class="img-section"><img src="5.jpg" alt=""></section>
+        <section class="img-section"><img src="6.jpg" alt=""></section>
+        <section class="img-section"><img src="7.jpg" alt=""></section>
+        <section class="img-section"><img src="8.jpg" alt=""></section>
+        <section class="img-section"><img src="9.jpg" alt=""></section>
+        <section class="img-section"><img src="10.jpg" alt=""></section>
 
-        <!-- Background Music -->
-        <audio id="bgMusic" loop>
-            <source src="music.mp3" type="audio/mpeg">
-        </audio>
-
-        <!-- Music Button -->
-        <button id="musicBtn" class="music-btn">
-            <i class="fa-solid fa-volume-xmark"></i>
-        </button>
 
     </div>
+
+    <!-- Background Music -->
+    <audio id="bgMusic" loop>
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Music Button -->
+    <button id="musicBtn" class="music-btn">
+        <i class="fa-solid fa-volume-xmark"></i>
+    </button>
 
     <script>
 
         const cover = document.getElementById("cover");
         const main = document.getElementById("main");
+        const flowerContainer = document.getElementById("flower-container");
+        const music = document.getElementById("bgMusic");
+        const musicBtn = document.getElementById("musicBtn");
 
+        let isPlaying = false;
+
+        // --- Reveal main card when the cover is clicked ---
         cover.addEventListener("click", () => {
 
             cover.classList.add("open");
@@ -409,80 +237,78 @@
                 cover.style.display = "none";
             }, 1600);
 
+            music.play().catch(() => {
+                // Autoplay can still be blocked by the browser; the button lets the user start it manually
+            });
+            isPlaying = true;
+            musicBtn.innerHTML = '<i class="fa-solid fa-music"></i>';
+            musicBtn.classList.add("playing");
+
         });
 
+        // --- Manual music toggle button ---
+        musicBtn.addEventListener("click", () => {
 
+            if (isPlaying) {
+                music.pause();
+                musicBtn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i>';
+                musicBtn.classList.remove("playing");
+            } else {
+                music.play();
+                musicBtn.innerHTML = '<i class="fa-solid fa-music"></i>';
+                musicBtn.classList.add("playing");
+            }
 
+            isPlaying = !isPlaying;
 
-        // Flower Rain
+        });
 
-        const flowerContainer = document.getElementById("flower-container");
-
-        // Flower emojis
+        // --- Flower Rain ---
         const flowers = ["🌸", "🌺", "🌼", "🌹"];
 
         function createFlower() {
-
             const flower = document.createElement("div");
             flower.className = "flower";
-
             flower.innerHTML = flowers[Math.floor(Math.random() * flowers.length)];
 
             flower.style.left = Math.random() * 100 + "vw";
-
             flower.style.fontSize = (20 + Math.random() * 35) + "px";
 
-            const duration = 15 + Math.random() * 6;
+            const duration = 10 + Math.random() * 5; // Faster fall
             flower.style.animationDuration = duration + "s";
-
-            flower.style.animationDelay = Math.random() * 5 + "s";
+            flower.style.animationDelay = "0s"; // Start immediately
 
             flowerContainer.appendChild(flower);
 
             setTimeout(() => {
                 flower.remove();
-            }, duration * 3000);
-
+            }, duration * 1000);
         }
 
-        // Keep creating flowers
-        setInterval(createFlower, 800);
+        // Create some flowers instantly on page load
+        for (let i = 0; i < 4; i++) {
+            createFlower();
+        }
 
+        // Create a new flower every 0.1 second (100ms)
+        setInterval(createFlower, 100);
 
+        // --- Scroll-in reveal for each full-bleed image section ---
+        const observer = new IntersectionObserver((entries) => {
 
+            entries.forEach(entry => {
 
-        cover.addEventListener("click", () => {
-
-            music.play();
-            isPlaying = true;
-            musicBtn.innerHTML = "🎵 Music On";
-            musicBtn.classList.add("playing");
-
-            const music = document.getElementById("bgMusic");
-            const musicBtn = document.getElementById("musicBtn");
-
-            let isPlaying = false;
-
-            musicBtn.addEventListener("click", () => {
-
-                if (isPlaying) {
-
-                    music.pause();
-                    musicBtn.innerHTML = "🔇 Music Off";
-                    musicBtn.classList.remove("playing");
-
-                } else {
-
-                    music.play();
-                    musicBtn.innerHTML = "🎵 Music On";
-                    musicBtn.classList.add("playing");
-
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("visible");
+                    observer.unobserve(entry.target);
                 }
 
-                isPlaying = !isPlaying;
-
             });
-        });
+
+        }, { threshold: 0.25 });
+
+        document.querySelectorAll(".img-section").forEach(el => observer.observe(el));
+
     </script>
 
 </body>
