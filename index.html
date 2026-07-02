@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Card</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        /* Animated Background */
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+
+            animation: bgMove 12s ease-in-out infinite alternate;
+            z-index: -2;
+        }
+
+        @keyframes bgMove {
+            from {
+                transform: scale(1);
+            }
+
+            to {
+                transform: scale(1.2);
+            }
+        }
+
+        /* Cover */
+
+        .cover {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            cursor: pointer;
+            perspective: 1800px;
+            background: #949494;
+        }
+
+        .topImage {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+
+            transform-origin: top;
+            transition: 1.4s cubic-bezier(.65, -0.2, .25, 1.3);
+
+            z-index: 3;
+            backface-visibility: hidden;
+        }
+
+        .bottomImage {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+
+            transform-origin: bottom;
+            transition: 1.4s cubic-bezier(.65, -0.2, .25, 1.3);
+
+            z-index: 2;
+            backface-visibility: hidden;
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, .35);
+        }
+
+        .centerText {
+            position: relative;
+            z-index: 5;
+            color: white;
+            text-align: center;
+        }
+
+        .centerText h1 {
+            font-size: 50px;
+            text-shadow: 0 0 25px cyan;
+        }
+
+        .centerText p {
+            margin-top: 15px;
+            opacity: .9;
+        }
+
+        .click {
+            margin-top: 25px;
+            display: inline-block;
+            padding: 14px 35px;
+            border: 2px solid white;
+            border-radius: 50px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 rgba(255, 255, 255, .5);
+            }
+
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 30px rgba(255, 255, 255, .8);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Open Animation */
+
+        .cover.open .topImage {
+            transform:
+                rotateX(-170deg) translateY(-10px);
+        }
+
+        .cover.open .bottomImage {
+            transform:
+                rotateX(170deg) translateY(10px);
+        }
+
+        .cover.open .centerText {
+            transform: scale(.5);
+            opacity: 0;
+            transition: 1s;
+        }
+
+        /* Main Card */
+
+        .main {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: 1s;
+        }
+
+        .main.show {
+            visibility: visible;
+            opacity: 1;
+        }
+
+
+
+        .card {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .4);
+        }
+
+        .card-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-content {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 60px 40px;
+            color: #5a2416;
+        }
+
+        .date {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 40px;
+            font-size: 18px;
+        }
+
+        .date strong {
+            font-size: 34px;
+        }
+
+        h1 {
+            font-size: 56px;
+            margin: 0;
+            font-family: Georgia, serif;
+        }
+
+        .and {
+            font-size: 28px;
+            margin: 12px 0;
+        }
+
+        h2 {
+            font-size: 48px;
+            margin-bottom: 25px;
+            font-family: Georgia, serif;
+        }
+
+        .tagline {
+            color: #8b1c2c;
+            font-size: 22px;
+            margin-bottom: 60px;
+        }
+
+        .host h4 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .host p {
+            font-size: 16px;
+            line-height: 1.8;
+        }
+
+        .open-btn {
+            margin-top: 40px;
+            background: #8b5a2b;
+            color: #fff;
+            padding: 15px 35px;
+            border-radius: 40px;
+            text-decoration: none;
+            transition: .3s;
+        }
+
+        .open-btn:hover {
+            transform: scale(1.08);
+            background: #6f431a;
+        }
+
+        /* Flower Rain */
+
+        #flower-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 999;
+        }
+
+        .flower {
+            position: absolute;
+            top: -80px;
+            font-size: 18px !important;
+            animation-name: fall;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+            opacity: .95;
+        }
+
+        @keyframes fall {
+
+            0% {
+                transform: translateY(-80px) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(110vh) rotate(720deg);
+                opacity: .9;
+            }
+
+        }
+
+
+        .music-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, .9);
+            color: #8b5a2b;
+            font-size: 22px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, .2);
+        }
+
+        .music-btn.playing {
+            background: #8b5a2b;
+            color: #fff;
+        }
+
+        .music-btn:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cover" id="cover">
+
+        <img src="top.png" class="topImage">
+
+
+        <img src="bottom.png" class="bottomImage">
+
+    </div>
+
+    <!-- Flower Rain -->
+
+    <div class="main" id="main">
+
+        <div class="card">
+
+            <!-- Background Invitation -->
+            <img src="1.jpg" class="card-bg">
+            <div id="flower-container"></div>
+
+            <!-- Content -->
+            <div class="card-content">
+
+                <div class="date">
+                    <span>July</span>
+                    <strong>05 - 06</strong>
+                    <span>2026</span>
+                </div>
+
+                <h1>Divisha</h1>
+
+                <div class="and">&</div>
+
+                <h2>Raghav</h2>
+
+                <p class="tagline">#DivyaRag</p>
+
+                <div class="host">
+                    <h4>Hosted By</h4>
+                    <p>
+                        Anil, Sanjay, Pawan Maheshwari<br>
+                        38, Maharana Pratap Nagar,<br>
+                        Bhilwara, Rajasthan - 311001
+                    </p>
+                </div>
+
+                <a href="#" class="open-btn">Open Invitation</a>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- Background Music -->
+        <audio id="bgMusic" loop>
+            <source src="music.mp3" type="audio/mpeg">
+        </audio>
+
+        <!-- Music Button -->
+        <button id="musicBtn" class="music-btn">
+            <i class="fa-solid fa-volume-xmark"></i>
+        </button>
+
+    </div>
+
+    <script>
+
+        const cover = document.getElementById("cover");
+        const main = document.getElementById("main");
+
+        cover.addEventListener("click", () => {
+
+            cover.classList.add("open");
+
+            setTimeout(() => {
+                main.classList.add("show");
+            }, 900);
+
+            setTimeout(() => {
+                cover.style.display = "none";
+            }, 1600);
+
+        });
+
+
+
+
+        // Flower Rain
+
+        const flowerContainer = document.getElementById("flower-container");
+
+        // Flower emojis
+        const flowers = ["🌸", "🌺", "🌼", "🌹"];
+
+        function createFlower() {
+
+            const flower = document.createElement("div");
+            flower.className = "flower";
+
+            flower.innerHTML = flowers[Math.floor(Math.random() * flowers.length)];
+
+            flower.style.left = Math.random() * 100 + "vw";
+
+            flower.style.fontSize = (20 + Math.random() * 35) + "px";
+
+            const duration = 15 + Math.random() * 6;
+            flower.style.animationDuration = duration + "s";
+
+            flower.style.animationDelay = Math.random() * 5 + "s";
+
+            flowerContainer.appendChild(flower);
+
+            setTimeout(() => {
+                flower.remove();
+            }, duration * 3000);
+
+        }
+
+        // Keep creating flowers
+        setInterval(createFlower, 800);
+
+
+
+
+        cover.addEventListener("click", () => {
+
+            music.play();
+            isPlaying = true;
+            musicBtn.innerHTML = "🎵 Music On";
+            musicBtn.classList.add("playing");
+
+            const music = document.getElementById("bgMusic");
+            const musicBtn = document.getElementById("musicBtn");
+
+            let isPlaying = false;
+
+            musicBtn.addEventListener("click", () => {
+
+                if (isPlaying) {
+
+                    music.pause();
+                    musicBtn.innerHTML = "🔇 Music Off";
+                    musicBtn.classList.remove("playing");
+
+                } else {
+
+                    music.play();
+                    musicBtn.innerHTML = "🎵 Music On";
+                    musicBtn.classList.add("playing");
+
+                }
+
+                isPlaying = !isPlaying;
+
+            });
+        });
+    </script>
+
+</body>
+
+</html>
